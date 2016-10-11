@@ -25,12 +25,4 @@ get_collection = (collection_name) ->
   db = get_database!
   return db\get_col collection_name
 
-insert = (collection_name, docs) ->
-  col = get_collection collection_name
-  return col\insert docs
-
-find_one = (collection_name, query, returnfields) ->
-  col = get_collection collection_name
-  return col\find_one(query, returnfields)
-
-:insert, :find_one
+:get_collection
