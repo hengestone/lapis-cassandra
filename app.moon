@@ -9,14 +9,13 @@ class MyModel extends Model
 
 class extends lapis.Application
   "/": =>
-    m = MyModel\create({{a: "b"}})
-    m = MyModel\create({{a: "b"}})
+    m = MyModel\create({a: "b"})
     
     return {
-      json: MyModel\find {a: "b"}
+      json: MyModel\find {}
     }
 
-  "/count": => response MyModel\count({a: "b"})
+  "/count": => response MyModel\count({})
 
   "/select": =>
     docs = MyModel\select {a: "b"}
@@ -36,3 +35,6 @@ class extends lapis.Application
   "/pagination_page": =>
     paginated = MyModel\paginated {a: "b"}
     response paginated\get_page 1
+
+  "/query": =>
+    response MyModel\select({a: "b"})

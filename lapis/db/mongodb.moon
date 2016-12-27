@@ -1,4 +1,6 @@
+cbson = require("cbson")
 config = require("lapis.config").get!
+moongoo = require("resty.moongoo")
 unless config.mongodb
   error "Mongodb configuration is missing"
 
@@ -10,19 +12,20 @@ get_default_config = ->
   return { host, port }
 
 get_connection = ->
-  mongol = require("resty.mongol")
-  conn = mongol\new!
-  ok,err = conn\connect(unpack(get_default_config!))
-  unless err
-    return conn
-  error("Cannot connect to mongodb server")
+  mg, err = moongoo.new("mongodb://127.0.0.1/?w=0")
+  if not mg
+    error(err)
+
+  return mg
 
 get_database = () ->
-  conn = get_connection()
-  return conn\new_db_handle(database_name)
+  mg = get_connection()
+  db = mg\db("test")
+  return db
 
 get_collection = (collection_name) ->
   db = get_database!
-  return db\get_col collection_name
+  col = db\collection("test")
+  return col
 
 :get_collection
