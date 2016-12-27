@@ -1,2 +1,2 @@
 #/bin/sh
-mongoimport -d test -c test --type json --file MOCK_DATA.json
+mongoimport -d lapis_mongo -c lapis_mongo --type json --file MOCK_DATA.json
