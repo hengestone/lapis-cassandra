@@ -5,7 +5,7 @@ config "development", ->
   mongodb ->
     host "127.0.0.1"
     port 27017
-    database "test"
+    database "lapis_mongo"
 
 config "production", ->
   port 80

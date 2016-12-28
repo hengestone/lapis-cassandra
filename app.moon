@@ -5,7 +5,7 @@ response = (json) ->
   json: json
 
 class MyModel extends Model
-  @table_name: => "test_collection"
+  @table_name: => "lapis_mongo"
 
 class extends lapis.Application
   "/": =>
