@@ -25,7 +25,7 @@ get_database = () ->
 
 get_collection = (collection_name) ->
   db = get_database!
-  col = db\collection("test")
+  col = db\collection(collection_name)
   return col
 
 :get_collection
