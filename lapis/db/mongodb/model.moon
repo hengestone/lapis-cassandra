@@ -8,7 +8,7 @@ class Model extends BaseModel
       @_col = mongodb.get_collection(@@table_name!)
     return @_col
 
-  @count: (query) => 
+  @count: (query) =>
     cur = @collection!\find query
     cur\count!
 
@@ -32,7 +32,8 @@ class Model extends BaseModel
 
   @select: (query, opts) =>
     cur, v, c =  @_get_cursor query
-    return cur\all!
+    res = cur\all!
+    @load_all res
 
   @_get_cursor: (query, fields) =>
     cur = @collection!\find query, fields
