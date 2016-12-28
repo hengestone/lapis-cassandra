@@ -17,6 +17,14 @@ class extends lapis.Application
 
   "/count": => response MyModel\count({})
 
+  "/delete": =>
+    m = MyModel\create({tdelete: "tdeletev"})
+    doc = MyModel\find {tdelete: "tdeletev"}
+    num, err = doc\delete!
+    doc2 = MyModel\find {tdelete: "tdelete"}
+    
+    response {doc: doc, doc2: doc2}
+
   "/select": =>
     docs = MyModel\select {}
     response docs

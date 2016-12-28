@@ -3,6 +3,7 @@ import OffsetPaginator from require "lapis.db.mongodb.pagination"
 mongodb = require("lapis.db.mongodb")
 
 class Model extends BaseModel
+  @db: mongodb.get_collection(@@table_name!)
   @collection: => 
     unless @_col
       @_col = mongodb.get_collection(@@table_name!)
@@ -15,8 +16,17 @@ class Model extends BaseModel
   @create: (doc) =>
     @collection!\insert doc
 
+  delete: =>
+    num, err = @@db\remove @_id
+    return num, err
+
   @find: (query, returnfields) =>
-    @collection!\find_one query, returnfields
+    doc, msg = @collection!\find_one query, returnfields
+
+    unless doc
+      return nil, msg
+
+    return @load(doc)
 
   @paginated: (...) =>
     OffsetPaginator @, ...
