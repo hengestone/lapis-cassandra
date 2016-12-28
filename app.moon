@@ -18,7 +18,7 @@ class extends lapis.Application
   "/count": => response MyModel\count({})
 
   "/select": =>
-    docs = MyModel\select {a: "b"}
+    docs = MyModel\select {}
     response docs
 
   "/pagination": =>
