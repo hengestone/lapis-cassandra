@@ -6,3 +6,6 @@ describe "lapis.db.mongodb.model", ->
 
   it "should get table name", ->
     assert.same "banned_users", (class BannedUsers extends Model)\table_name!
+
+  it "should get table name", ->
+    assert.same "banned_users", (class BannedUsers extends Model)\count!

@@ -21,15 +21,16 @@ class Model extends BaseModel
   @paginated: (...) =>
     OffsetPaginator @, ...
 
-  @select: (query, opts = {}) =>
+  @select: (query, fields) =>
     cur, v, c = @collection!\query query, nil, 2
     return v
     --cur = @_get_cursor query, {a: "b"}, 2
     --{k,v for k,v in cur\pairs!}
 
-  @_get_cursor: (query, opts = {}) =>
-    return @collection!\find query, {a: "b"}, 2
-    
+  @_get_cursor: (query, fields) =>
+    cur = @collection!\find query, fields
+    return cur
+
   @_col = false
 
 :Model

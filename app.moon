@@ -22,7 +22,16 @@ class extends lapis.Application
     response docs
 
   "/pagination": =>
-    paginated = MyModel\paginated {a: "b"}
+    page = @params.page or 1
+    paginated = MyModel\paginated {}
+    pagination = {
+      total_items: paginated\total_items!
+      :page
+      num_pages: paginated\num_pages!
+      items: paginated\get_page page
+    }
+    
+    response pagination
 
   "/pagination_count": =>
     paginated = MyModel\paginated {a: "b"}

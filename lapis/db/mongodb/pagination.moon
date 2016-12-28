@@ -8,13 +8,17 @@ class OffsetPaginator extends Paginator
         @_cursor = false
 
     get_page: (page) =>
+        page = tonumber page
+        skip = if page > 1
+            (page - 1) * @per_page   
+        else
+            0
+
         unless @_cursor
             @_cursor = @model\_get_cursor(@_clause, @_opts)
-        
-        col = @model\collection!
-        col\getmore(@_cursor, 2, 2)
-        --page = (math.max 1, tonumber(page) or 0) - 1
-        
+        @_cursor\limit @per_page
+        @_cursor\skip skip
+        return @_cursor\all!
 
     num_pages: =>
         math.ceil @total_items! / @per_page
