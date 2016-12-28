@@ -6,13 +6,14 @@ unless config.mongodb
 
 database_name = config.mongodb.database
 
-get_default_config = ->
+get_uri = ->
   host = config.mongodb.host or "127.0.0.1"
   port = config.mongodb.port or 27017
-  return { host, port }
+  wk = config.mongodb.wk or 0
+  return "mongodb://#{host}:#{port}/?wk=#{wk}"
 
 get_connection = ->
-  mg, err = moongoo.new("mongodb://127.0.0.1/?w=0")
+  mg, err = moongoo.new(get_uri!)
   if not mg
     error(err)
 
@@ -20,7 +21,7 @@ get_connection = ->
 
 get_database = () ->
   mg = get_connection()
-  db = mg\db("test")
+  db = mg\db(database_name)
   return db
 
 get_collection = (collection_name) ->
