@@ -36,6 +36,18 @@ class Model extends BaseModel
     res = cur\all!
     @load_all res
 
+  update: =>
+    num, err = @@collection!\update @_id, @, {
+      multi: false, upsert: false
+    }
+
+    if err
+      return false, err
+
+    return true
+
+  refresh: => @@find @_id
+
   @_get_cursor: (query, fields) =>
     cur = @collection!\find query, fields
     return cur
