@@ -19,3 +19,10 @@ describe "lapis.db.mongodb.model", ->
     }
 
     assert.same type(id), "table"
+
+  it "should get find a model", ->
+    doc = LapisMongo\find {
+      myName: "Criztian"
+    }
+
+    assert.is_not_nil doc._id
