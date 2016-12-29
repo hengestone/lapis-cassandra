@@ -1,5 +1,6 @@
 lapis = require "lapis"
 Model = require("lapis.db.mongodb.model").Model
+db = require "lapis.db.mongodb"
 
 response = (json) ->
   json: json
@@ -55,3 +56,14 @@ class extends lapis.Application
 
   "/query": =>
     response MyModel\select({a: "b"})
+
+  "/update": =>
+    db.drop_collection "lapis_mongo"
+
+    MyModel\create mykey: "myvalue"
+    doc = MyModel\find mykey: "myvalue"
+    doc.updatedField = true
+    doc\update!
+    doc = MyModel\find mykey: "myvalue"
+    response doc
+

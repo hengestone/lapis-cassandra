@@ -24,9 +24,15 @@ get_database = () ->
   db = mg\db(database_name)
   return db
 
+--
+--
 get_collection = (collection_name) ->
   db = get_database!
   col = db\collection(collection_name)
   return col
 
-:get_collection
+drop_collection = (collection_name) ->
+  col = get_collection(collection_name)
+  return col\drop!
+
+:drop_collection, :get_collection
