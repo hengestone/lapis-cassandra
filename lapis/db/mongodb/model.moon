@@ -36,7 +36,6 @@ class Model extends BaseModel
     @load_all res
 
   update: =>
-    @_id = nil
     num, err = @@collection!\update @_id, @, {
       multi: false, upsert: false
     }
@@ -45,6 +44,8 @@ class Model extends BaseModel
       return false, err
 
     return true
+
+  refresh: => @@find @_id
 
   @_get_cursor: (query, fields) =>
     cur = @collection!\find query, fields

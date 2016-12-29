@@ -64,6 +64,5 @@ class extends lapis.Application
     doc = MyModel\find mykey: "myvalue"
     doc.updatedField = true
     doc\update!
-    doc = MyModel\find mykey: "myvalue"
-    response doc
+    response doc\refresh!
 
