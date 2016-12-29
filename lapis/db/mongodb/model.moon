@@ -13,7 +13,8 @@ class Model extends BaseModel
     cur\count!
 
   @create: (doc) =>
-    @collection!\insert doc
+    id, err = @collection!\insert doc
+    return id, err
 
   delete: =>
     num, err = @@collection!\remove @_id
