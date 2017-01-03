@@ -26,6 +26,7 @@ get_database = () ->
 
 --
 --
+
 get_collection = (collection_name) ->
   db = get_database!
   col = db\collection(collection_name)
@@ -35,4 +36,9 @@ drop_collection = (collection_name) ->
   col = get_collection(collection_name)
   return col\drop!
 
-:drop_collection, :get_collection
+map_reduce = (collection_name, map, reduce, flags) ->
+  col = get_collection(collection_name)
+  doc_or_collection, err = col\map_reduce map, reduce, flags
+  return doc_or_collection, err
+
+:drop_collection, :get_collection, :map_reduce

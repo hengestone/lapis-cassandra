@@ -1,4 +1,5 @@
 import Model from require "lapis.db.mongodb.model"
+db = require "lapis.db.mongodb"
 
 class LapisMongo extends Model
 
@@ -26,3 +27,10 @@ describe "lapis.db.mongodb.model", ->
     }
 
     assert.is_not_nil doc._id
+
+  it "should perform a map reduce", ->
+    map = "function() { emit(this.gender, 1); }"
+    reduce = "function(key, values) { return Array.sum(values); }"
+    doc_or_new_col, err = db.map_reduce "lapis_mongo", map, reduce
+    assert.same doc_or_new_col, { { _id: "Female", value: 491 }, { _id: "Male", value: 509 } }
+
