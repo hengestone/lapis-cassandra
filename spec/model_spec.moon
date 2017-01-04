@@ -38,6 +38,13 @@ describe "lapis.db.mongodb.model", ->
     
     assert.same doc_or_new_col, expected
 
+  it "should find_one doc", ->
+    doc = db.find_one "lapis_mongo", {
+      gender: "Female"
+    }
+
+    assert.is_not_nil doc._id
+
   it "should get create a model", ->
     id = LapisMongo\create {
       myName: "Criztian"
