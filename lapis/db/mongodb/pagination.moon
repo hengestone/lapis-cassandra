@@ -5,20 +5,27 @@ class OffsetPaginator extends Paginator
     new: (@model, clause={}, opts={}) =>
         @_clause = clause
         @_opts = opts
-        @_cursor = false
+
+    each_page: (starting_page=1) =>
+        coroutine.wrap ->
+            page = starting_page
+            while true
+                results = @get_page page
+                break unless next results
+                coroutine.yield results, page
+                page += 1
 
     get_page: (page) =>
         page = tonumber page
         skip = if page > 1
-            (page - 1) * @per_page   
+            (page - 1) * @per_page
         else
             0
 
-        unless @_cursor
-            @_cursor = @model\_get_cursor(@_clause, @_opts)
-        @_cursor\limit @per_page
-        @_cursor\skip skip
-        return @_cursor\all!
+        _cursor = @model\_get_cursor(@_clause, @_opts)
+        _cursor\limit @per_page
+        _cursor\skip skip
+        return _cursor\all!
 
     num_pages: =>
         math.ceil @total_items! / @per_page

@@ -27,6 +27,13 @@ describe "lapis.db.mongodb.model", ->
     assert.same page[2].email, "jcastillo1@facebook.com"
     
 
+  it "should each all pages", ->
+    paginated = LapisMongo\paginated {}
+    i = 0
+    for page_results, page_num in paginated\each_page!
+      i = i + 1
+    assert.same i, 100
+
   it "should perform a map reduce", ->
     map = "function() { emit(this.gender, 1); }"
     reduce = "function(key, values) { return Array.sum(values); }"
@@ -52,4 +59,12 @@ describe "lapis.db.mongodb.model", ->
     }
 
     assert.is_not_nil doc._id
+
+  it "should delete a model", ->
+    doc = LapisMongo\find {
+      myName: "Criztian"
+    }
+
+    _, err = doc\delete!
+    assert.is_nil err
 
