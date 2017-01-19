@@ -36,9 +36,18 @@ drop_collection = (collection_name) ->
   col = get_collection(collection_name)
   return col\drop!
 
+find_one = (collection_name, query, fields) ->
+  col = get_collection(collection_name)
+  doc, err = col\find_one query, fields
+  return doc, err
+
 map_reduce = (collection_name, map, reduce, flags) ->
   col = get_collection(collection_name)
   doc_or_collection, err = col\map_reduce map, reduce, flags
   return doc_or_collection, err
 
-:drop_collection, :get_collection, :map_reduce
+{ 
+  :drop_collection
+  :find_one
+  :get_collection, :map_reduce
+}
