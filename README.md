@@ -1,3 +1,7 @@
+# lapis-cassandra
+
+Based on lapis-mongodb
+
 # lapis-mongodb
 
 ## License (MIT)
