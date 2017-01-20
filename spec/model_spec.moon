@@ -1,77 +1,43 @@
-import Model from require "lapis.db.mongodb.model"
-db = require "lapis.db.mongodb"
+db = require "lapis.db.cassandra"
 
-class LapisMongo extends Model
+import setup_db, teardown_db from require "spec_cassandra.helpers"
+import Users, Posts, Likes from require "spec_cassandra.models"
 
-describe "lapis.db.mongodb.model", ->
-  it "should get assert", ->
-    assert.true true
+describe "model", ->
+  setup ->
+    setup_db!
 
-  it "should get table name", ->
-    assert.same "lapis_mongo", LapisMongo\table_name!
+  teardown ->
+    teardown_db!
 
-  it "should get collection count", ->
-    assert.same 1000, LapisMongo\count!
+  describe "core model", ->
+    build = require "spec.core_model_cassandra_specs"
+    build { :Users, :Posts, :Likes }
 
-  it "should get pagination total pages", ->
-    paginated = LapisMongo\paginated {}
-    assert.same paginated\num_pages!, 100
+  it "should get columns of model", ->
+    result, error, code = Users\create_table!
 
-  it "should get pagination count", ->
-    paginated = LapisMongo\paginated {}
-    assert.same paginated\total_items!, 1000
+    assert.same {
+      {
+        "column_name": "id"
+        "columnfamily_name": "users"
+        "keyspace_name": "lapis_test"
+        "type": "partition_key"
+        "validator": "org.apache.cassandra.db.marshal.Int32Type"
+      }
+      {
+        "column_name": "name"
+        "columnfamily_name": "users"
+        "component_index": 0
+        "keyspace_name": "lapis_test"
+        "type": "regular"
+        "validator": "org.apache.cassandra.db.marshal.UTF8Type"
+      }
+    }, Users\columns!
 
-  it "should get pagination page 1 & 100", ->
-    paginated = LapisMongo\paginated {}
-    page = paginated\get_page(1)
-    assert.same page[2].email, "jcastillo1@facebook.com"
-    
 
-  it "should each all pages", ->
-    paginated = LapisMongo\paginated {}
-    i = 0
-    for page_results, page_num in paginated\each_page!
-      i = i + 1
-    assert.same i, 100
-
-  it "should perform a map reduce", ->
-    map = "function() { emit(this.gender, 1); }"
-    reduce = "function(key, values) { return Array.sum(values); }"
-    doc_or_new_col, err = db.map_reduce "lapis_mongo", map, reduce
-    expected = {
-      { _id: "Female", value: 491 },
-      { _id: "Male", value: 509 } 
-    }
-    
-    assert.same doc_or_new_col, expected
-
-  it "should find_one doc", ->
-    doc = db.find_one "lapis_mongo", {
-      gender: "Female"
-    }
-
-    assert.is_not_nil doc._id
-
-  it "should get create a model", ->
-    id = LapisMongo\create {
-      myName: "Criztian"
-      myLastname: "Haunsen"
-    }
-
-    assert.same type(id), "table"
-
-  it "should find a model", ->
-    doc = LapisMongo\find {
-      myName: "Criztian"
-    }
-
-    assert.is_not_nil doc._id
-
-  it "should delete a model", ->
-    doc = LapisMongo\find {
-      myName: "Criztian"
-    }
-
-    _, err = doc\delete!
-    assert.is_nil err
+  it "should create empty row", ->
+    Posts\create_table!
+    -- this fails in postgres, but mysql gives default values
+    Posts\create {}
 
