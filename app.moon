@@ -1,17 +1,17 @@
 lapis = require "lapis"
-Model = require("lapis.db.mongodb.model").Model
-db = require "lapis.db.mongodb"
+Model = require("lapis.db.cassandra.model").Model
+db = require "lapis.cassandra.mongodb"
 
 response = (json) ->
   json: json
 
 class MyModel extends Model
-  @table_name: => "lapis_mongo"
+  @table_name: => "lapis_cassandra"
 
 class extends lapis.Application
   "/": =>
     m = MyModel\create({a: "b"})
-    
+
     return {
       json: MyModel\find {}
     }
@@ -23,7 +23,7 @@ class extends lapis.Application
     doc = MyModel\find {tdelete: "tdeletev"}
     num, err = doc\delete!
     doc2 = MyModel\find {tdelete: "tdelete"}
-    
+
     response {doc: doc, doc2: doc2}
 
   "/select": =>
@@ -39,7 +39,7 @@ class extends lapis.Application
       num_pages: paginated\num_pages!
       items: paginated\get_page page
     }
-    
+
     response pagination
 
   "/pagination_count": =>
@@ -58,7 +58,7 @@ class extends lapis.Application
     response MyModel\select({a: "b"})
 
   "/update": =>
-    db.drop_collection "lapis_mongo"
+    db.drop_collection "lapis_cassandra"
 
     MyModel\create mykey: "myvalue"
     doc = MyModel\find mykey: "myvalue"
